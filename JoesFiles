@@ -1,0 +1,242 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+repeat wait() until game:IsLoaded()
+sethiddenproperty(game:GetService("Players").LocalPlayer,"SimulationRadius",math.huge)
+ local path 
+  if game.PlaceId == 6558526079 then 
+    path = game:GetService("Players").LocalPlayer.PlayerGui.TeamUI.UI.Team.Grid
+ else
+ path  = game:GetService("Players").LocalPlayer.PlayerGui.InterFace.Equip.Grid
+ end
+
+local units = {"None"}
+ for i,v in pairs(path:GetDescendants()) do 
+ if v:IsA('Model') and  v.Parent.Name == "WorldModel" then 
+table.insert(units,v.Name)
+  end
+  end
+
+  local vu = game:GetService("VirtualUser")
+game:GetService("Players").LocalPlayer.Idled:connect(function()
+   vu:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+   wait(3)
+   vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
+end)
+
+getgenv().Name = "None"
+local connection
+local Library = loadstring(game:GetObjects("rbxassetid://7657867786")[1].Source)()
+local Catalyst = Library:CreateWindow({
+    Name = 'Private Cheats | B1G GANG',
+    Themeable = {
+        Info = 'only 2 persons own this.',
+        Credit = true,
+    },
+    DefaultTheme = ''
+})
+local GeneralTab = Catalyst:CreateTab({
+    Name = "Main"
+})
+
+local OtherSection = GeneralTab:CreateSection({
+	Name = 'Units Place [1]',
+	Side = 'Left' -- The default side is left.
+})
+
+Library.Notify({
+	Text = "Welcome Back " .. game.Players.LocalPlayer.Name .. "!",
+	Duration = 5 -- Default is 5
+})
+
+OtherSection:AddDropdown({
+    Name = "Select Unit To Place:",
+    Multiple = false,
+    List = units,
+    Callback = function(value)
+       getgenv().Name = value
+    end
+})
+
+local Toggle = OtherSection:AddToggle({
+	Name = 'Auto Place Unit [1]',
+	Value = false, -- Default is false
+	Flag = 'autoplace',
+	Locked = false, -- Default is false
+	Callback = function( state ) -- Optional
+		getgenv().a = state
+		while task.wait() do 
+		 if a == true then 
+			local args = {
+	   [1] = getgenv().Name,
+	   [2] = game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame
+   }
+   game:GetService("ReplicatedStorage"):WaitForChild("Remote"):WaitForChild("SpawnUnit"):InvokeServer(unpack(args))
+   
+	else
+	wait()
+	break
+	end
+	   end
+	end
+})
+
+local Button = OtherSection:AddButton({
+	Name = "Ctrl-Click Place Unit [1]",
+	Callback = function()
+local Plr = game:GetService("Players").LocalPlayer
+local Mouse = Plr:GetMouse()
+
+
+
+connection  = Mouse.Button1Down:connect(function()
+if not game:GetService("UserInputService"):IsKeyDown(Enum.KeyCode.LeftControl) then return end
+if not Mouse.Target then return end
+         local args = {
+    [1] = getgenv().Name,
+    [2] = Mouse.Hit
+}
+game:GetService("ReplicatedStorage"):WaitForChild("Remote"):WaitForChild("SpawnUnit"):InvokeServer(unpack(args))
+end)
+	end
+})
+
+local Button = OtherSection:AddButton({
+	Name = "Reset Unit For Ctrl-Click Place",
+	Callback = function()
+		connection:Disconnect()
+		Library.Notify({
+			Text = "Select New Unit To Make Ctrl-Click Place Unit[1] Working Again.",
+			Duration = 5-- Default is 5
+		})
+	end
+})
+
+
+--RIGHT 
+
+local OtherSection = GeneralTab:CreateSection({
+	Name = 'Remove Lags',
+	Side = 'Right' -- The default side is left.
+})
+
+local Button = OtherSection:AddButton({
+	Name = "Sell All Selected Unit",
+	Callback = function()
+for i,v in pairs(workspace.Units:GetChildren()) do 
+	if v:IsA("Model") and v.Name == getgenv().Name then 
+local args = {
+[1] = v
+}
+
+game:GetService("ReplicatedStorage"):WaitForChild("Remote"):WaitForChild("SellUnit"):InvokeServer(unpack(args))
+	end 
+	end
+end
+})
+
+local Button = OtherSection:AddButton({
+	Name = "Remove All Selected Unit",
+	Callback = function()
+	 for i,v in pairs(workspace.Units:GetChildren()) do 
+		 if v:IsA("Model") and v.Name == getgenv().Name then 
+			 v:Destroy()
+		 end
+		end
+
+		for i,v in pairs(workspace.Effect:GetChildren()) do 
+			if v:IsA("Model")  then 
+				v:Destroy()
+			end
+		   end
+	end
+})
+
+
+local Slider = OtherSection:AddSlider({ -- You can also use it on Toggle instead of Section!
+	Name = 'Player WalkSpeed:',
+	Flag = "slide_in_your_DMs", -- hi hi ha,
+	Value = 24,
+	Min = 20, -- 0 is a lie btw, also very scary
+	Max = 300,
+	Decimals = 1, -- 13.00
+	llegalInput = false, -- true allow textbox to break min & max limits
+	Callback = function(x) -- Optional again, all callbacks are optinal...
+		game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = x
+	end
+})
